@@ -1,0 +1,23 @@
+{
+  "name": "precipitator"
+  "version": "0.1.0",
+  "description": "alexa app to provide more specific hourly rain forecast"
+  "main": "index.js",
+  "dependencies": {
+    "alexa-sdk": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carusocr/alexa_weather.git"
+  },
+  "author": "Chris Caruso",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/carusocr/alexa_weather/issues"
+  },
+  "homepage": "https://github.com/carusocr/alexa_weather#readme"
+}
