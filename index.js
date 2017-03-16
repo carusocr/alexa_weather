@@ -36,9 +36,17 @@ var newSessionHandlers = {
         output = welcomeMessage;
         this.emit(':ask', output, welcomeReprompt);
     },
-    'getWeatherIntent': function () {
+    'getPresentWeatherIntent': function () {
         this.handler.state = states.RAINMODE;
-        this.emitWithState('getWeatherIntent');
+        this.emitWithState('getPresentWeatherIntent');
+    },
+    'getRangeWeatherIntent': function () {
+        this.handler.state = states.RAINMODE;
+        this.emitWithState('getRangeWeatherIntent');
+    },
+    'getDayWeatherIntent': function () {
+        this.handler.state = states.RAINMODE;
+        this.emitWithState('getDayWeatherIntent');
     },
     'AMAZON.StopIntent': function () {
         this.emit(':tell', goodbyeMessage);
@@ -65,7 +73,7 @@ var startRainHandlers = Alexa.CreateStateHandler(states.RAINMODE, {
         output = helpMessage;
         this.emit(':ask', output, helpMessage);
     },
-    'getWeatherIntent': function() {
+    'getPresentWeatherIntent': function() {
       httpGet('hourly', function (response) {
         var obj = JSON.parse(response);
         var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"]
@@ -73,11 +81,28 @@ var startRainHandlers = Alexa.CreateStateHandler(states.RAINMODE, {
         //alexa.emit(':tell', hour_pct);
         alexa.emit(':tell', output);
       });
-      //alexa.emit(':tell', "hey");
-  }
+  },
         //for (var i=0; i<obj["hourly_forecast"].length; i++) {
         //  console.log(obj["hourly_forecast"][i]["FCTTIME"]["hour"]+": "+obj["hourly_forecast"][i]["pop"]);
         //}
+    'getRangeWeatherIntent': function() {
+      httpGet('hourly', function (response) {
+        var obj = JSON.parse(response);
+        var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"]
+        var output = "Chance of rain this hour is " + hour_pct + " percent.";
+        //alexa.emit(':tell', hour_pct);
+        alexa.emit(':tell', output);
+      });
+  },
+    'getDayWeatherIntent': function() {
+      httpGet('hourly', function (response) {
+        var obj = JSON.parse(response);
+        var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"]
+        var output = "Chance of rain this hour is " + hour_pct + " percent.";
+        //alexa.emit(':tell', hour_pct);
+        alexa.emit(':tell', output);
+      });
+  }
 });
 
 exports.handler = function(event, context, callback) {
