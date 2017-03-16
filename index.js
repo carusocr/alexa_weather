@@ -12,6 +12,8 @@ Desired functionality is to be able to ask three different questions:
   Expected answer should be: "There's a x% chance of rain at 2pm."
 3. Will it rain between 3 and 8 today?
   Expected answer should report something like an average of percent chance over that period, or peak chance.
+4. What's the chance of rain in the next x hours?
+  "There's an average x% chance of rain in the next x hours, with a peak of x% at <time>."
 */
 
 var Alexa = require('alexa-sdk');
