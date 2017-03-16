@@ -81,11 +81,15 @@ var startRainHandlers = Alexa.CreateStateHandler(states.RAINMODE, {
         alexa.emit(':tell', output);
       });
     },
-    'getRangeWeatherIntent': function() {
+    'getDayWeatherIntent': function() {
       httpGet('hourly', function (response) {
         var obj = JSON.parse(response);
-        var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"];
-        var output = "Chance of rain this hour is " + hour_pct + " percent.";
+        var sum =0;
+        for (var i=0; i<8;i++) {
+          sum += parseInt(obj["hourly_forecast"][i]["pop"]);
+        }
+        var avg = (sum/8);
+        var output = "Average chance of rain in the next 8 hours is " + avg + " percent.";
         alexa.emit(':tell', output);
       });
     }
