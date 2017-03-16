@@ -1,0 +1,11 @@
+{
+  "intents": [
+    { "intent": "getWeather", "slots": [] },
+    { "intent": "AMAZON.YesIntent", "slots": [] },
+    { "intent": "AMAZON.NoIntent", "slots": [] },
+    { "intent": "AMAZON.HelpIntent", "slots": [] },
+    { "intent": "AMAZON.StopIntent", "slots": [] },
+    { "intent": "AMAZON.CancelIntent", "slots": [] },
+    { "intent": "AMAZON.RepeatIntent", "slots": [] }
+  ]
+}

@@ -1,0 +1,5 @@
+getWeatherIntent tell me the weather
+
+AMAZON.StopIntent stop
+AMAZON.StopIntent off
+AMAZON.StopIntent shut up
