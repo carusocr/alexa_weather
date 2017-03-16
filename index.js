@@ -62,7 +62,7 @@ var newSessionHandlers = {
     'Unhandled': function () {
         output = helpMessage;
         this.emit(':ask', output, welcomeReprompt);
-    },
+    }
 };
 
 var startRainHandlers = Alexa.CreateStateHandler(states.RAINMODE, {
@@ -76,33 +76,19 @@ var startRainHandlers = Alexa.CreateStateHandler(states.RAINMODE, {
     'getPresentWeatherIntent': function() {
       httpGet('hourly', function (response) {
         var obj = JSON.parse(response);
-        var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"]
+        var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"];
         var output = "Chance of rain this hour is " + hour_pct + " percent.";
-        //alexa.emit(':tell', hour_pct);
         alexa.emit(':tell', output);
       });
-  },
-        //for (var i=0; i<obj["hourly_forecast"].length; i++) {
-        //  console.log(obj["hourly_forecast"][i]["FCTTIME"]["hour"]+": "+obj["hourly_forecast"][i]["pop"]);
-        //}
+    },
     'getRangeWeatherIntent': function() {
       httpGet('hourly', function (response) {
         var obj = JSON.parse(response);
-        var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"]
+        var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"];
         var output = "Chance of rain this hour is " + hour_pct + " percent.";
-        //alexa.emit(':tell', hour_pct);
         alexa.emit(':tell', output);
       });
-  },
-    'getDayWeatherIntent': function() {
-      httpGet('hourly', function (response) {
-        var obj = JSON.parse(response);
-        var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"]
-        var output = "Chance of rain this hour is " + hour_pct + " percent.";
-        //alexa.emit(':tell', hour_pct);
-        alexa.emit(':tell', output);
-      });
-  }
+    }
 });
 
 exports.handler = function(event, context, callback) {
@@ -139,11 +125,10 @@ function httpGet(query, callback) {
   req.end();
 
   req.on('error', (e) => {
-    console.error(e)
+    console.error(e);
   });
 }
-/*
-httpGet('hourly', function (response) {
+/*httpGet('hourly', function (response) {
 
   var obj = JSON.parse(response);
   var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"]
