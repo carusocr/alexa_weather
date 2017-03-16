@@ -90,7 +90,7 @@ var startRainHandlers = Alexa.CreateStateHandler(states.RAINMODE, {
         for (var i=0; i<8;i++) {
           sum += parseInt(obj["hourly_forecast"][i]["pop"]);
         }
-        var avg = (sum/8);
+        var avg = Math.round((sum/8));
         var output = "Average chance of rain in the next 8 hours is " + avg + " percent.";
         alexa.emit(':tell', output);
       });
@@ -121,10 +121,6 @@ function httpGet(query, callback) {
     });
 
     res.on('end', function() {
-      //obj = JSON.parse(str)
-      //for (var i=0; i<obj["hourly_forecast"].length; i++) {
-      //  console.log(obj["hourly_forecast"][i]["FCTTIME"]["hour"]+": "+obj["hourly_forecast"][i]["pop"]);
-      //}
       callback(body);
     });
   });
@@ -134,14 +130,3 @@ function httpGet(query, callback) {
     console.error(e);
   });
 }
-/*httpGet('hourly', function (response) {
-
-  var obj = JSON.parse(response);
-  var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"]
-  //for (var i=0; i<obj["hourly_forecast"].length; i++) {
-  //  console.log(obj["hourly_forecast"][i]["FCTTIME"]["hour"]+": "+obj["hourly_forecast"][i]["pop"]);
-  //}
-  object = "chance of rain this hour is: " + hour_pct;
-  console.log(object);
-});
-*/
