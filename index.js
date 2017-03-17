@@ -13,31 +13,40 @@ Desired functionality is to be able to ask three different questions:
 3. Will it rain between 3 and 8 today?
   Expected answer should report something like an average of percent chance over that period, or peak chance.
 */
-var Alexa = require('alexa-sdk')
-var http = require('http')
+
+var Alexa = require('alexa-sdk');
+var http = require('http');
+var states = {
+  RAINMODE: '_RAINMODE'
+};
 var alexa;
 
-var welcome_message = "I'm your autistic rain forecaster. You can ask me if it will rain today, if it will rain at a particular hour, or if it will rain between two times."
+var welcomeMessage = "I'm your obsessive rain forecaster. You can ask me if it will rain today, if it will rain at a particular hour, or if it will rain between two times.";
 
-var welcome_reprompt = "I must forecast! Existence is pain! Please ask me if it will rain today, or ask me if it will rain at a certain time."
+var welcomeReprompt = "I must forecast! Existence is pain! Please ask me if it will rain today, or ask me if it will rain at a certain time.";
 
-var help_message = "Here are some examples of what to say: Will it rain today? Will it rain at 2pm today? Will it rain between 3pm and 8pm today?"
+var helpMessage = "Here are some examples of what to say: Will it rain today? Will it rain at 2pm today? Will it rain between 3pm and 8pm today?";
 
-var goodbye_message = "Stay dry. Or get wet! You get to choose."
+var goodbyeMessage = "Stay dry. Or get wet! You get to choose.";
 
-var options = {
-  host: 'api.wunderground.com',
-  path: '/api/158842b0cdbea83d/hourly/q/WA/Seattle.json',
-  json: true
-};
 
 var newSessionHandlers = {
     'LaunchRequest': function () {
+        this.handler.state = states.RAINMODE;
         output = welcomeMessage;
-        this.emit(':ask', output, welcomeRepromt);
+        this.emit(':ask', output, welcomeReprompt);
     },
-    'day_weather': function () {
-        this.emitWithState('getAttractionIntent');
+    'getPresentWeatherIntent': function () {
+        this.handler.state = states.RAINMODE;
+        this.emitWithState('getPresentWeatherIntent');
+    },
+    'getRangeWeatherIntent': function () {
+        this.handler.state = states.RAINMODE;
+        this.emitWithState('getRangeWeatherIntent');
+    },
+    'getDayWeatherIntent': function () {
+        this.handler.state = states.RAINMODE;
+        this.emitWithState('getDayWeatherIntent');
     },
     'AMAZON.StopIntent': function () {
         this.emit(':tell', goodbyeMessage);
@@ -51,13 +60,50 @@ var newSessionHandlers = {
         this.emit('AMAZON.StopIntent');
     },
     'Unhandled': function () {
-        output = HelpMessage;
-        this.emit(':ask', output, welcomeRepromt);
-    },
+        output = helpMessage;
+        this.emit(':ask', output, welcomeReprompt);
+    }
 };
 
+var startRainHandlers = Alexa.CreateStateHandler(states.RAINMODE, {
+    'AMAZON.StopIntent': function () {
+        this.emit(':tell', goodbyeMessage);
+    },
+    'AMAZON.HelpIntent': function () {
+        output = helpMessage;
+        this.emit(':ask', output, helpMessage);
+    },
+    'getPresentWeatherIntent': function() {
+      httpGet('hourly', function (response) {
+        var obj = JSON.parse(response);
+        var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"];
+        var output = "Chance of rain this hour is " + hour_pct + " percent.";
+        alexa.emit(':tell', output);
+      });
+    },
+    'getRangeWeatherIntent': function() {
+      httpGet('hourly', function (response) {
+        var obj = JSON.parse(response);
+        var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"];
+        var output = "Chance of rain this hour is " + hour_pct + " percent.";
+        alexa.emit(':tell', output);
+      });
+    }
+});
+
+exports.handler = function(event, context, callback) {
+  alexa = Alexa.handler(event, context);
+  alexa.registerHandlers(newSessionHandlers, startRainHandlers);
+  alexa.execute();
+};
 
 function httpGet(query, callback) {
+
+  var options = {
+    host: 'api.wunderground.com',
+    path: '/api/158842b0cdbea83d/hourly/q/WA/Seattle.json',
+    json: true
+  };
 
   var req = http.request(options, (res) => {
 
@@ -79,13 +125,17 @@ function httpGet(query, callback) {
   req.end();
 
   req.on('error', (e) => {
-    console.error(e)
+    console.error(e);
   });
 }
-httpGet('hourly', function (response) {
+/*httpGet('hourly', function (response) {
 
   var obj = JSON.parse(response);
-  for (var i=0; i<obj["hourly_forecast"].length; i++) {
-    console.log(obj["hourly_forecast"][i]["FCTTIME"]["hour"]+": "+obj["hourly_forecast"][i]["pop"]);
-  }
+  var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"]
+  //for (var i=0; i<obj["hourly_forecast"].length; i++) {
+  //  console.log(obj["hourly_forecast"][i]["FCTTIME"]["hour"]+": "+obj["hourly_forecast"][i]["pop"]);
+  //}
+  object = "chance of rain this hour is: " + hour_pct;
+  console.log(object);
 });
+*/
