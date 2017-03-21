@@ -1,5 +1,14 @@
-getWeatherIntent tell me the weather
-
+getDayWeatherIntent tell me today's chance of rain
+getDayWeatherIntent what the chance of rain is today
+getDayWeatherIntent is it going to rain today
+getDayWeatherIntent will it rain
+getDayWeatherIntent rain today
+getRangeWeatherIntent tell me the chance of rain between {start_time} and {end_time}
+getPresentWeatherIntent tell me the chance of rain right now
+getPresentWeatherIntent rain now
+getPresentWeatherIntent is it raining now
+getTargetWeatherIntent tell me the chance of rain at {time}
+getTargetWeatherIntent will it rain at {time}
 AMAZON.StopIntent stop
 AMAZON.StopIntent off
 AMAZON.StopIntent shut up
