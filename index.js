@@ -36,6 +36,8 @@ var helpMessage = "Here are some examples of what to say: Will it rain today? Wi
 
 var goodbyeMessage = "Stay dry. Or get wet! You get to choose.";
 
+var meeseeksMessage = 'Hello <say-as interpret-as="cardinal">12345</say-as>'; 
+
 
 var newSessionHandlers = {
     'LaunchRequest': function () {
@@ -90,6 +92,7 @@ var startRainHandlers = Alexa.CreateStateHandler(states.RAINMODE, {
         var hour_pct = obj["hourly_forecast"][0]["FCTTIME"]["hour"];
         var output = "Chance of rain this hour is " + hour_pct + " percent.";
         alexa.emit(':tell', output);
+        //alexa.emit(':tell', meeseeksMessage);
       });
     },
     'getTargetWeatherIntent': function() {
@@ -105,6 +108,16 @@ var startRainHandlers = Alexa.CreateStateHandler(states.RAINMODE, {
           }
         }
         var output = "The chance of rain at " + targetTime + " is " + pct_chance + " percent.";
+        alexa.emit(':tell', output);
+      });
+    },
+    'getRangeWeatherIntent': function() {
+      var startTime = this.event.request.intent.slots.start_time.value;
+      var endTime = this.event.request.intent.slots.end_time.value;
+      httpGet('hourly', function (response) {
+        var obj = JSON.parse(response);
+        //do something with range
+        var output = "You said between " + startTime + " and " + endTime;
         alexa.emit(':tell', output);
       });
     },
