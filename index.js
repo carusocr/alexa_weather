@@ -116,15 +116,29 @@ var startRainHandlers = Alexa.CreateStateHandler(states.RAINMODE, {
       var endTime = this.event.request.intent.slots.end_time.value;
       httpGet('hourly', function (response) {
         var obj = JSON.parse(response);
+        var pct_chance;
+        var peak_chance = 0;
+        var sum=0;
+        var peak_time=0;
+        for (var i=startTime; i<=endTime;i++) {
+          pct_chance = parseInt(obj["hourly_forecast"][i]["pop"]);
+          sum += pct_chance;
+          if (pct_chance > peak_chance) {
+            peak_chance = pct_chance;
+            peak_time = i;
+          }
+        }
+        var avg = Math.round((sum/8));
         //do something with range
-        var output = "You said between " + startTime + " and " + endTime;
+        //var output = "You said between " + startTime + " and " + endTime;
+        var output = "Average chance of rain between " + startTime + " and " + endTime + " is " + avg + " percent, with a peak of " + peak_chance + " at " + peak_time;
         alexa.emit(':tell', output);
       });
     },
     'getDayWeatherIntent': function() {
       httpGet('hourly', function (response) {
         var obj = JSON.parse(response);
-        var sum =0;
+        var sum=0;
         for (var i=0; i<8;i++) {
           sum += parseInt(obj["hourly_forecast"][i]["pop"]);
         }
